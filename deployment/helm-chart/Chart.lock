@@ -1,0 +1,6 @@
+dependencies:
+- name: eks-app
+  repository: oci://025122073501.dkr.ecr.eu-central-1.amazonaws.com
+  version: 0.30.0
+digest: sha256:ac0274b317ee80bce7529e1717345df52bc3303d0742e9502bdf75925d74ad08
+generated: "2024-01-01T14:34:58.383922+01:00"

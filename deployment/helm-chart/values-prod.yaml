@@ -1,0 +1,22 @@
+eks-app:
+  appVersion: 0.0.1
+  image: 025122073501.dkr.ecr.eu-central-1.amazonaws.com/moverepublic/assistant-api
+  replication:
+    requested: 1
+    alwaysAvailable: 0
+  host: "assistant.api.moverepublic.com"
+  servicePort: 8080
+  memoryRequest: 50Mi
+  memoryLimit: 50Mi
+  healthcheck:
+    path: /actuator/health
+  eksNodeSelector:
+    mysports-rewards.com/node-group: default
+  #  targetGroupArn: arn:aws:elasticloadbalancing:eu-central-1:939720760244:targetgroup/msr-analytics-api-dev/9d6e187169fb591d
+  sendConsoleLogsToGraylog: false
+  frequentTcpKeepalives: true
+  env:
+    - name: OPEN_API_KEY
+      valueFromSecret:
+        name: open-ai
+        key: api-key

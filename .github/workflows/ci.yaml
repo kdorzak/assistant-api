@@ -1,0 +1,44 @@
+name: assistant-api - CI
+
+on:
+  push:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}
+
+permissions:
+  checks: write
+  id-token: write
+  contents: write
+
+env:
+  VERSION: 0.0.${{ github.run_number }}
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: mysports-rewards/msr-github-actions/actions/docker-login@main
+
+
+      - name: Set up Docker Buildx
+        if: github.ref == 'refs/heads/main'
+        uses: docker/setup-buildx-action@v3
+      - name: Build and push
+        if: github.ref == 'refs/heads/main'
+        uses: docker/build-push-action@v5
+        with:
+          context: ./api
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: 025122073501.dkr.ecr.eu-central-1.amazonaws.com/moverepublic/assistant-api:${{ env.VERSION }}
+
+      - name: Deploy to dev
+        if: github.ref == 'refs/heads/main'
+        uses: mysports-rewards/msr-github-actions/actions/argocd-deploy@main
+        with:
+          working-directory: .
+          version: ${{ env.VERSION }}
+          application-name: Assistant API

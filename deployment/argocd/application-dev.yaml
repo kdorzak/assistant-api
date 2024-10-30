@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mr-assistant-api-dev
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: git@github.com:mysports-rewards/assistant-api.git
+    targetRevision: HEAD
+    path: api/deployment/helm-chart
+    helm:
+      releaseName: mr-assistant-api-dev
+      valueFiles:
+        - values-dev.yaml
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: msr-dev
+
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      selfHeal: true
+      prune: true

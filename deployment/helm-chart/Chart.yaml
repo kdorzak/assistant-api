@@ -1,0 +1,9 @@
+apiVersion: v2
+name: mr-assistant-api
+type: application
+version: 0.1.0
+
+dependencies:
+  - name: eks-app
+    version: 0.30.0
+    repository: oci://025122073501.dkr.ecr.eu-central-1.amazonaws.com

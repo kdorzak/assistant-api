@@ -1,16 +1,26 @@
-from openai import OpenAI
-
 from .client import client
-from .tools import transfer_to_service_desk, transfer_to_motivation_manager, transfer_back_to_triage, escalate_to_human
+from .tools import (
+    transfer_to_service_desk,
+    transfer_to_motivation_manager,
+    transfer_back_to_triage,
+    escalate_to_human,
+)
 from .util import function_to_schema
 
-
 available_assistants = client.beta.assistants.list().data
-for assistant in available_assistants:
-    print(f"Deleting {assistant}")
-    client.beta.assistants.delete(assistant.id)
 
-triage_agent = client.beta.assistants.create(
+dummy_agent = next(
+    assistant for assistant in available_assistants if assistant.name == "Dummy Agent"
+) or client.beta.assistants.create(
+    model="gpt-4o-mini",
+    name="Dummy Agent",
+    instructions=["You are a helpful assistant."],
+    tools=[],
+)
+
+triage_agent = next(
+    assistant for assistant in available_assistants if assistant.name == "Triage Agent"
+) or client.beta.assistants.create(
     model="gpt-4o-mini",
     name="Triage Agent",
     description="Assistant capable of directing users to right department",
@@ -25,7 +35,11 @@ triage_agent = client.beta.assistants.create(
         function_to_schema(transfer_to_service_desk),
     ],
 )
-motivation_manager_agent = client.beta.assistants.create(
+motivation_manager_agent = next(
+    assistant
+    for assistant in available_assistants
+    if assistant.name == "Motivation Manager"
+) or client.beta.assistants.create(
     model="gpt-4o-mini",
     name="Motivation Manager",
     description="Assistant capable of directing users to right department",
@@ -43,7 +57,9 @@ motivation_manager_agent = client.beta.assistants.create(
         function_to_schema(escalate_to_human),
     ],
 )
-service_desk_agent = client.beta.assistants.create(
+service_desk_agent = next(
+    assistant for assistant in available_assistants if assistant.name == "Service Desk"
+) or client.beta.assistants.create(
     model="gpt-4o-mini",
     name="Service Desk",
     description="Assistant capable of solving issues with Move Republic mobile app",
@@ -61,7 +77,4 @@ service_desk_agent = client.beta.assistants.create(
         function_to_schema(escalate_to_human),
     ],
 )
-current_assistant = triage_agent
-
-client.beta.threads.retrieve(thread_id=1)
-client.beta.threads.messages.list(thread_id=1)
+current_assistant = dummy_agent

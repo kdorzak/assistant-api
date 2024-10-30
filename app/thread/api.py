@@ -1,9 +1,8 @@
 # api.py
 from fastapi import APIRouter
-from fastapi import HTTPException
 
 from .model import Thread, Message
-from .service import create_thread, get_thread, add_message_to_thread
+from .service import create_thread, submit_message
 
 router = APIRouter()
 
@@ -13,9 +12,6 @@ async def create_thread_endpoint():
     return create_thread()
 
 
-@router.post("/threads/{id}/messages", response_model=Thread)
-async def add_message_to_thread_endpoint(id2: int, message: Message) -> Thread:
-    thread = add_message_to_thread(id2, message.content)
-    if thread is None:
-        raise HTTPException(status_code=404, detail="Thread not found")
-    return thread
+@router.post("/threads/{id}/messages", response_model=Message)
+async def talk(id: str, message: Message) -> Message:
+    return submit_message(id, message.content)

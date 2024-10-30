@@ -1,12 +1,10 @@
 # main.py
-import uvicorn
 from fastapi import FastAPI
 
-from thread import api as thread_router
+from app.thread import api as thread_router
+from app.health import api as health_router
 
 app = FastAPI()
 
 app.include_router(thread_router.router)
-
-if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+app.include_router(health_router.router)

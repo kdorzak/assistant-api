@@ -1,24 +1,51 @@
 # services.py
-from typing import List, Dict
-from .model import Thread
+import logging
+import time
 
-# In-memory storage for threads and messages
-threads: Dict[int, List[str]] = {}
-thread_counter = 0
+from app.agent.client import client
+from app.agent.setup import current_assistant
+from .model import Thread, Message
+
+logger = logging.getLogger(__name__)
+
+
+def wait_on_run(run, thread_id):
+    loop_count = 0
+    while run.status == "queued" or run.status == "in_progress":
+        run = client.beta.threads.runs.retrieve(
+            thread_id=thread_id,
+            run_id=run.id,
+        )
+        loop_count += 1
+        time.sleep(0.01)
+    logger.info(f"Got response after {loop_count} tries")
+    return run
+
 
 def create_thread() -> Thread:
-    global thread_counter
-    thread_counter += 1
-    threads[thread_counter] = []
-    return Thread(id=thread_counter, messages=[])
+    thread = client.beta.threads.create()
+    return Thread(id=thread.id, messages=[])
 
-def get_thread(id: int) -> Thread :
-    if id not in threads:
-        return None
-    return Thread(id=id, messages=threads[id])
 
-def add_message_to_thread(id: int, message_content: str) -> Thread:
-    if id not in threads:
-        return None
-    threads[id].append(message_content)
-    return Thread(id=id, messages=threads[id])
+def submit_message(thread_id: str, message: str) -> Message:
+    thread = client.beta.threads.retrieve(thread_id)
+
+    client.beta.threads.messages.create(
+        thread.id,
+        role="user",
+        content=message,
+    )
+    run = client.beta.threads.runs.create(
+        thread_id=thread.id, assistant_id=current_assistant.id
+    )
+    wait_on_run(run, thread_id)
+
+    last_message = client.beta.threads.messages.list(
+        thread_id=thread_id,
+        limit=1,
+    ).data[0]
+    response = "".join(
+        entry.text.value for entry in last_message.content if entry.type == "text"
+    )
+
+    return Message(content=response)
