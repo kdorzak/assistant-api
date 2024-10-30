@@ -1,0 +1,21 @@
+[project]
+name = "assistant-api"
+version = "0.1.0"
+description = "AI powered assistants"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi[standard]>=0.115.4",
+    "openai>=1.52.2",
+    "pydantic-settings>=2.6.0",
+    "pydantic>=2.9.2",
+]
+
+[dependency-groups]
+dev = [
+    "coverage>=7.6.4",
+    "mypy>=1.13.0",
+    "pre-commit>=4.0.1",
+    "pytest>=8.3.3",
+    "ruff>=0.7.1",
+]
