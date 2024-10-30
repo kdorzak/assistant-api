@@ -30,4 +30,4 @@ RUN chown -R fastapi:fastapi /app
 USER fastapi
 
 EXPOSE 8080
-CMD ["fastapi", "run", "--proxy-headers", "--workers", "4", "main.py", "--port", "8080", "-root-path", "/assistant-api"]
+CMD ["fastapi", "run", "--proxy-headers", "--workers", "4", "main.py", "--port", "8080", "--root-path", "/assistant-api"]
