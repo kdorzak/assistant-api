@@ -1,5 +1,5 @@
 eks-app:
-  appVersion: 0.0.2
+  appVersion: 0.0.3
   image: 025122073501.dkr.ecr.eu-central-1.amazonaws.com/moverepublic/assistant-api
   replication:
     requested: 1
@@ -16,7 +16,7 @@ eks-app:
   sendConsoleLogsToGraylog: false
   frequentTcpKeepalives: true
   env:
-    - name: OPEN_API_KEY
+    - name: OPENAI_API_KEY
       valueFromSecret:
         name: open-ai
         key: api-key

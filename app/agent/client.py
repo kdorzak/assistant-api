@@ -3,5 +3,5 @@ from app.config import settings
 
 
 client = OpenAI(
-    api_key=settings.open_api_key,
+    api_key=settings.openai_api_key,
 )
