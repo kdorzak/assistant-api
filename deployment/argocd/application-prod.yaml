@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: git@github.com:mysports-rewards/assistant-api.git
     targetRevision: HEAD
-    path: api/deployment/helm-chart
+    path: deployment/helm-chart
     helm:
       releaseName: mr-assistant-api-prod
       valueFiles:
