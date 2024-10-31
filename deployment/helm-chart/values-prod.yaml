@@ -6,8 +6,8 @@ eks-app:
     alwaysAvailable: 0
   host: "assistant.api.moverepublic.com"
   servicePort: 8080
-  memoryRequest: 50Mi
-  memoryLimit: 50Mi
+  memoryRequest: 500Mi
+  memoryLimit: 500Mi
   healthcheck:
     path: /actuator/health
   eksNodeSelector:
