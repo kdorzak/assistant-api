@@ -10,16 +10,26 @@ from .util import function_to_schema
 available_assistants = client.beta.assistants.list().data
 
 dummy_agent = next(
-    assistant for assistant in available_assistants if assistant.name == "Dummy Agent"
+    (
+        assistant
+        for assistant in available_assistants
+        if assistant.name == "Dummy Agent"
+    ),
+    None,
 ) or client.beta.assistants.create(
     model="gpt-4o-mini",
     name="Dummy Agent",
-    instructions=["You are a helpful assistant."],
+    instructions="You are a helpful assistant." "Always respond in sentence or less",
     tools=[],
 )
 
 triage_agent = next(
-    assistant for assistant in available_assistants if assistant.name == "Triage Agent"
+    (
+        assistant
+        for assistant in available_assistants
+        if assistant.name == "Triage Agent"
+    ),
+    None,
 ) or client.beta.assistants.create(
     model="gpt-4o-mini",
     name="Triage Agent",
@@ -36,9 +46,12 @@ triage_agent = next(
     ],
 )
 motivation_manager_agent = next(
-    assistant
-    for assistant in available_assistants
-    if assistant.name == "Motivation Manager"
+    (
+        assistant
+        for assistant in available_assistants
+        if assistant.name == "Motivation Manager"
+    ),
+    None,
 ) or client.beta.assistants.create(
     model="gpt-4o-mini",
     name="Motivation Manager",
@@ -58,7 +71,12 @@ motivation_manager_agent = next(
     ],
 )
 service_desk_agent = next(
-    assistant for assistant in available_assistants if assistant.name == "Service Desk"
+    (
+        assistant
+        for assistant in available_assistants
+        if assistant.name == "Service Desk"
+    ),
+    None,
 ) or client.beta.assistants.create(
     model="gpt-4o-mini",
     name="Service Desk",

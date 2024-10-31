@@ -3,7 +3,7 @@ import logging
 import time
 
 from app.agent.client import client
-from app.agent.setup import current_assistant
+from app.agent.setup import current_assistant, motivation_manager_agent
 from .model import Thread, Message
 
 logger = logging.getLogger(__name__)
@@ -36,7 +36,7 @@ def submit_message(thread_id: str, message: str) -> Message:
         content=message,
     )
     run = client.beta.threads.runs.create(
-        thread_id=thread.id, assistant_id=current_assistant.id
+        thread_id=thread.id, assistant_id=motivation_manager_agent.id
     )
     wait_on_run(run, thread_id)
 

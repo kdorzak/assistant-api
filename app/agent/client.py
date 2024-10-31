@@ -1,4 +1,3 @@
-from fastapi.security import APIKeyHeader
 from openai import OpenAI
 from app.config import settings
 
