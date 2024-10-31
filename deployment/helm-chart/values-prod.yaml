@@ -16,7 +16,7 @@ eks-app:
   sendConsoleLogsToGraylog: false
   frequentTcpKeepalives: true
   env:
-    - name: OPEN_API_KEY
+    - name: OPENAI_API_KEY
       valueFromSecret:
         name: open-ai
         key: api-key
